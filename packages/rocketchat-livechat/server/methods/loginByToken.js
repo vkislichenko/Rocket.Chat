@@ -1,6 +1,6 @@
 Meteor.methods({
 	'livechat:loginByToken'(token) {
-		const user = RocketChat.models.Users.getVisitorByToken(token, { fields: { _id: 1 } });
+		const user = RocketChat.models.Visitors.getVisitorByToken(token, { fields: { _id: 1 } });
 
 		if (!user) {
 			return;
@@ -19,7 +19,7 @@ Meteor.methods({
 			}
 		};
 
-		Meteor.users.update(user._id, updateUser);
+		RocketChat.models.Visitors.model.update(user._id, updateUser);
 
 		return {
 			token: stampedToken.token

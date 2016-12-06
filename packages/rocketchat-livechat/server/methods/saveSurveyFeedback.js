@@ -6,7 +6,7 @@ Meteor.methods({
 		check(visitorRoom, String);
 		check(formData, [Match.ObjectIncluding({ name: String, value: String })]);
 
-		const visitor = RocketChat.models.Users.getVisitorByToken(visitorToken);
+		const visitor = RocketChat.models.Visitors.getVisitorByToken(visitorToken);
 		const room = RocketChat.models.Rooms.findOneById(visitorRoom);
 
 		if (visitor !== undefined && room !== undefined && room.v !== undefined && visitor.profile !== undefined && room.v.token === visitor.profile.token) {

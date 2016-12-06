@@ -103,32 +103,6 @@ RocketChat.models.Users.getNextAgent = function() {
 };
 
 /**
- * Gets visitor by token
- * @param {string} token - Visitor token
- */
-RocketChat.models.Users.getVisitorByToken = function(token, options) {
-	var query = {
-		'profile.guest': true,
-		'profile.token': token
-	};
-
-	return this.findOne(query, options);
-};
-
-/**
- * Gets visitor by token
- * @param {string} token - Visitor token
- */
-RocketChat.models.Users.findVisitorByToken = function(token) {
-	var query = {
-		'profile.guest': true,
-		'profile.token': token
-	};
-
-	return this.find(query);
-};
-
-/**
  * Change user's livechat status
  * @param {string} token - Visitor token
  */
@@ -164,53 +138,4 @@ RocketChat.models.Users.openOffice = function() {
 	self.findAgents().forEach(function(agent) {
 		self.setLivechatStatus(agent._id, 'available');
 	});
-};
-
-RocketChat.models.Users.updateLivechatDataByToken = function(token, key, value) {
-	const query = {
-		'profile.token': token
-	};
-
-	const update = {
-		$set: {
-			[`livechatData.${key}`]: value
-		}
-	};
-
-	return this.update(query, update);
-};
-
-/**
- * Find a visitor by their phone number
- * @return {object} User from db
- */
-RocketChat.models.Users.findOneVisitorByPhone = function(phone) {
-	const query = {
-		'phone.phoneNumber': phone
-	};
-
-	return this.findOne(query);
-};
-
-/**
- * Get the next visitor name
- * @return {string} The next visitor name
- */
-RocketChat.models.Users.getNextVisitorUsername = function() {
-	const settingsRaw = RocketChat.models.Settings.model.rawCollection();
-	const findAndModify = Meteor.wrapAsync(settingsRaw.findAndModify, settingsRaw);
-
-	const query = {
-		_id: 'Livechat_guest_count'
-	};
-
-	const update = {
-		$inc: {
-			value: 1
-		}
-	};
-
-	const livechatCount = findAndModify(query, null, update);
-
-	return 'guest-' + (livechatCount.value.value + 1);
 };

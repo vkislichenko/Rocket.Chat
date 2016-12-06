@@ -89,7 +89,7 @@ RocketChat.Livechat = {
 			}
 		};
 
-		const user = RocketChat.models.Users.getVisitorByToken(token, { fields: { _id: 1 } });
+		const user = RocketChat.models.Visitors.getVisitorByToken(token, { fields: { _id: 1 } });
 
 		if (user) {
 			userId = user._id;
@@ -101,12 +101,12 @@ RocketChat.Livechat = {
 			}
 		} else {
 			if (!username) {
-				username = RocketChat.models.Users.getNextVisitorUsername();
+				username = RocketChat.models.Visitors.getNextVisitorUsername();
 			}
 
 			var existingUser = null;
 
-			if (s.trim(email) !== '' && (existingUser = RocketChat.models.Users.findOneByEmailAddress(email))) {
+			if (s.trim(email) !== '' && (existingUser = RocketChat.models.Visitors.findOneByEmailAddress(email))) {
 				if (existingUser.type !== 'visitor') {
 					throw new Meteor.Error('error-invalid-user', 'This email belongs to a registered user.');
 				}
@@ -160,7 +160,7 @@ RocketChat.Livechat = {
 			];
 		}
 
-		Meteor.users.update(userId, updateUser);
+		RocketChat.models.Visitors.model.update(userId, updateUser);
 
 		return userId;
 	},
@@ -177,7 +177,7 @@ RocketChat.Livechat = {
 		if (phone) {
 			updateData.phone = phone;
 		}
-		const ret = RocketChat.models.Users.saveUserById(_id, updateData);
+		const ret = RocketChat.models.Visitors.saveInfoById(_id, updateData);
 
 		Meteor.defer(() => {
 			RocketChat.callbacks.run('livechat.saveGuest', updateData);
@@ -264,7 +264,7 @@ RocketChat.Livechat = {
 
 	forwardOpenChats(userId) {
 		RocketChat.models.Rooms.findOpenByAgent(userId).forEach((room) => {
-			const guest = RocketChat.models.Users.findOneById(room.v._id);
+			const guest = RocketChat.models.Visitors.findOneById(room.v._id);
 			this.transfer(room, guest, { departmentId: guest.department });
 		});
 	},
@@ -347,7 +347,7 @@ RocketChat.Livechat = {
 	},
 
 	getLivechatRoomGuestInfo(room) {
-		const visitor = RocketChat.models.Users.findOneById(room.v._id);
+		const visitor = RocketChat.models.Visitors.findOneById(room.v._id);
 		const agent = RocketChat.models.Users.findOneById(room.servedBy._id);
 
 		const ua = new UAParser();

@@ -6,7 +6,7 @@ Meteor.methods({
 				return RocketChat.models.Rooms.updateLivechatDataByToken(token, key, value);
 			} else {
 				// Save in user
-				return RocketChat.models.Users.updateLivechatDataByToken(token, key, value);
+				return RocketChat.models.Visitors.updateLivechatDataByToken(token, key, value);
 			}
 		}
 

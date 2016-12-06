@@ -29,7 +29,7 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 		return message;
 	}
 
-	const visitor = RocketChat.models.Users.getVisitorByToken(room.v.token);
+	const visitor = RocketChat.models.Visitors.getVisitorByToken(room.v.token);
 
 	if (!visitor || !visitor.profile || !visitor.phone || visitor.phone.length === 0) {
 		return message;

@@ -4,7 +4,7 @@ RocketChat.API.v1.addRoute('livechat/sms-incoming/:service', {
 
 		const sms = SMSService.parse(this.bodyParams);
 
-		var visitor = RocketChat.models.Users.findOneVisitorByPhone(sms.from);
+		var visitor = RocketChat.models.Visitors.findOneVisitorByPhone(sms.from);
 
 		let sendMessage = {
 			message: {
@@ -38,7 +38,7 @@ RocketChat.API.v1.addRoute('livechat/sms-incoming/:service', {
 				}
 			});
 
-			visitor = RocketChat.models.Users.findOneById(userId);
+			visitor = RocketChat.models.Visitors.findOneById(userId);
 		}
 
 		sendMessage.message.msg = sms.body;

@@ -10,7 +10,7 @@ Meteor.publish('livechat:visitorInfo', function({ rid: roomId }) {
 	var room = RocketChat.models.Rooms.findOneById(roomId);
 
 	if (room && room.v && room.v._id) {
-		return RocketChat.models.Users.findById(room.v._id);
+		return RocketChat.models.Visitors.findById(room.v._id);
 	} else {
 		return this.ready();
 	}
