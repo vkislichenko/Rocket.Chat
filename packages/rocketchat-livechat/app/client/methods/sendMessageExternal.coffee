@@ -8,8 +8,8 @@ Meteor.methods
 				message.ts = new Date(Date.now() + TimeSync.serverOffset())
 
 			message.u =
-				_id: Meteor.userId()
-				username: Meteor.user()?.username || 'visitor'
+				_id: visitor.userId()
+				username: visitor.getUsername() || 'visitor'
 
 			message.temp = true
 

@@ -23,7 +23,7 @@ RocketChat.QueueMethods = {
 			ts: new Date(),
 			v: {
 				_id: guest._id,
-				token: message.token
+				token: guest.profile.token
 			},
 			servedBy: {
 				_id: agent.agentId,
@@ -109,7 +109,7 @@ RocketChat.QueueMethods = {
 			ts: new Date(),
 			v: {
 				_id: guest._id,
-				token: message.token
+				token: guest.profile.token
 			},
 			cl: false,
 			open: true,

@@ -1,15 +1,17 @@
 Meteor.methods({
-	sendMessageLivechat: function(message) {
-		var guest;
+	sendMessageLivechat: function(token, message) {
+		check(message, {
+			_id: String,
+			rid: String,
+			msg: String
+		});
 
-		check(message.rid, String);
-		check(message.token, String);
-
-		guest = Meteor.users.findOne(Meteor.userId(), {
+		const guest = RocketChat.models.Visitors.getVisitorByToken(token, {
 			fields: {
 				name: 1,
 				username: 1,
-				department: 1
+				department: 1,
+				profile: 1
 			}
 		});
 

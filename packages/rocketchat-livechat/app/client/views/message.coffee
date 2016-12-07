@@ -2,7 +2,7 @@ import moment from 'moment'
 
 Template.message.helpers
 	own: ->
-		return 'own' if this.u?._id is Meteor.userId()
+		return 'own' if this.u?._id is visitor.userId()
 
 	time: ->
 		return moment(this.ts).format('LT')

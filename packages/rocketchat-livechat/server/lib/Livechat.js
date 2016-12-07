@@ -76,7 +76,9 @@ RocketChat.Livechat = {
 		// return messages;
 		return _.extend(RocketChat.sendMessage(guest, message, room), { newRoom: newRoom, showConnecting: this.showConnecting() });
 	},
-	registerGuest({ token, name, email, department, phone, loginToken, username } = {}) {
+	registerGuest({ token, name, email, department, phone, username } = {}) {
+		console.log('token ->', token);
+		console.log('arguments ->', arguments);
 		check(token, String);
 
 		let userId;
@@ -93,12 +95,6 @@ RocketChat.Livechat = {
 
 		if (user) {
 			userId = user._id;
-			if (loginToken) {
-				if (!updateUser.$addToSet) {
-					updateUser.$addToSet = {};
-				}
-				updateUser.$addToSet['services.resume.loginTokens'] = loginToken;
-			}
 		} else {
 			if (!username) {
 				username = RocketChat.models.Visitors.getNextVisitorUsername();
@@ -114,10 +110,6 @@ RocketChat.Livechat = {
 				updateUser.$addToSet = {
 					globalRoles: 'livechat-guest'
 				};
-
-				if (loginToken) {
-					updateUser.$addToSet['services.resume.loginTokens'] = loginToken;
-				}
 
 				userId = existingUser._id;
 			} else {
@@ -136,15 +128,7 @@ RocketChat.Livechat = {
 					userData.host = this.connection.httpHeaders.host;
 				}
 
-				userId = Accounts.insertUserDoc({}, userData);
-
-				if (loginToken) {
-					updateUser.$set.services = {
-						resume: {
-							loginTokens: [ loginToken ]
-						}
-					};
-				}
+				userId = RocketChat.models.Visitors.insert(userData);
 			}
 		}
 

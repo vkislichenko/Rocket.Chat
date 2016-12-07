@@ -13,6 +13,10 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 
 	var user = RocketChat.models.Users.findOneById(message.u._id);
 
+	if (!user) {
+		return message;
+	}
+
 	/*
 	Increment unread couter if direct messages
 	 */

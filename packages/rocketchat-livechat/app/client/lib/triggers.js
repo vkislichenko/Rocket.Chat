@@ -5,7 +5,7 @@ this.Triggers = (function() {
 	var enabled = true;
 
 	var fire = function(trigger) {
-		if (!enabled || Meteor.userId()) {
+		if (!enabled || visitor.userId()) {
 			return;
 		}
 		trigger.actions.forEach(function(action) {

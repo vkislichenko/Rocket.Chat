@@ -17,7 +17,8 @@ Template.livechatWindow.helpers({
 		return Session.get('sound');
 	},
 	showRegisterForm() {
-		if (Session.get('triggered') || Meteor.userId()) {
+		console.log('showRegisterForm ->', visitor);
+		if (Session.get('triggered') || visitor.userId()) {
 			return false;
 		}
 		return Livechat.registrationForm;

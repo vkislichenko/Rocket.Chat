@@ -6,23 +6,23 @@ Meteor.methods({
 			return;
 		}
 
-		const stampedToken = Accounts._generateStampedLoginToken();
-		const hashStampedToken = Accounts._hashStampedToken(stampedToken);
+		// const stampedToken = Accounts._generateStampedLoginToken();
+		// const hashStampedToken = Accounts._hashStampedToken(stampedToken);
 
-		let updateUser = {
-			$set: {
-				services: {
-					resume: {
-						loginTokens: [ hashStampedToken ]
-					}
-				}
-			}
-		};
+		// let updateUser = {
+		// 	$set: {
+		// 		services: {
+		// 			resume: {
+		// 				loginTokens: [ hashStampedToken ]
+		// 			}
+		// 		}
+		// 	}
+		// };
 
-		RocketChat.models.Visitors.model.update(user._id, updateUser);
+		// RocketChat.models.Visitors.model.update(user._id, updateUser);
 
 		return {
-			token: stampedToken.token
+			userId: user._id
 		};
 	}
 });

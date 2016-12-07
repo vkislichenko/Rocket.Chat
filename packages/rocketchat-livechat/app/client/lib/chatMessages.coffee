@@ -44,7 +44,7 @@ class @ChatMessages
 		return if element.classList.contains("system")
 		this.clearEditing()
 		id = element.getAttribute("id")
-		message = ChatMessage.findOne { _id: id, 'u._id': Meteor.userId() }
+		message = ChatMessage.findOne { _id: id, 'u._id': visitor.userId() }
 		this.input.value = message.msg
 		this.editing.element = element
 		this.editing.index = index or this.getEditingIndex(element)
@@ -79,12 +79,11 @@ class @ChatMessages
 				msgObject = {
 					_id: Random.id(),
 					rid: rid,
-					msg: msg,
-					token: visitor.getToken()
+					msg: msg
 				}
 				MsgTyping.stop(rid)
 
-				Meteor.call 'sendMessageLivechat', msgObject, (error, result) ->
+				Livechat.call 'sendMessageLivechat', msgObject, (error, result) ->
 					if error
 						ChatMessage.update msgObject._id, { $set: { error: true } }
 						showError error.reason
@@ -94,23 +93,23 @@ class @ChatMessages
 						ChatMessage.update result._id, _.omit(result, '_id')
 						Livechat.room = result.rid
 
-			if not Meteor.userId()
-				guest = {
-					token: visitor.getToken()
-				}
+			if not visitor.userId()
+				guest = {}
 
 				if Livechat.department
 					guest.department = Livechat.department
 
-				Meteor.call 'livechat:registerGuest', guest, (error, result) ->
+				Livechat.call 'livechat:registerGuest', guest, (error, result) ->
 					if error?
 						return showError error.reason
 
-					Meteor.loginWithToken result.token, (error) ->
-						if error
-							return showError error.reason
+					visitor.setUserId(result.userId);
 
-						sendMessage()
+					# Meteor.loginWithToken result.token, (error) ->
+					# 	if error
+					# 		return showError error.reason
+
+					sendMessage()
 			else
 				sendMessage()
 

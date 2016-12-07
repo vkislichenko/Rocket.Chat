@@ -64,7 +64,8 @@ Template.messages.events({
 	'click .video-button': function(event) {
 		event.preventDefault();
 
-		if (!Meteor.userId()) {
+		console.log('click .video-button ->', visitor);
+		if (!visitor.userId()) {
 			Meteor.call('livechat:registerGuest', { token: visitor.getToken() }, (error, result) => {
 				if (error) {
 					return console.log(error.reason);

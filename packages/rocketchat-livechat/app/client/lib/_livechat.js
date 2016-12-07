@@ -25,7 +25,7 @@ this.Livechat = new (class Livechat {
 		this._department = new ReactiveVar(null);
 
 		Tracker.autorun(() => {
-			if (this._room.get() && Meteor.userId()) {
+			if (this._room.get() && visitor.userId()) {
 				RoomHistoryManager.getMoreIfIsEmpty(this._room.get());
 				visitor.subscribeToRoom(this._room.get());
 				visitor.setRoom(this._room.get());
@@ -139,5 +139,10 @@ this.Livechat = new (class Livechat {
 		if (dept) {
 			this._department.set(dept._id);
 		}
+	}
+
+	call(method, ...args) {
+		console.log('Meteor.call ->', method, visitor.getToken(), ...args);
+		return Meteor.call(method, visitor.getToken(), ...args);
 	}
 })();

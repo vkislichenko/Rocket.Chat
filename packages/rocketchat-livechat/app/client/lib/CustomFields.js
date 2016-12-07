@@ -13,7 +13,7 @@ this.CustomFields = (function() {
 
 	var init = function() {
 		Tracker.autorun(function() {
-			if (Meteor.userId()) {
+			if (visitor.userId()) {
 				initiated = true;
 				Object.keys(queue).forEach((key) => {
 					setCustomField.call(this, queue[key].token, key, queue[key].value);

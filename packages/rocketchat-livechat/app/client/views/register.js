@@ -47,21 +47,16 @@ Template.register.events({
 			}
 
 			var guest = {
-				token: visitor.getToken(),
 				name: $name.val(),
 				email: $email.val(),
 				department: Livechat.deparment || departmentId
 			};
-			Meteor.call('livechat:registerGuest', guest, function(error, result) {
+			Livechat.call('livechat:registerGuest', guest, function(error, result) {
 				if (error != null) {
 					return instance.showError(error.reason);
 				}
-				Meteor.loginWithToken(result.token, function(error) {
-					if (error) {
-						return instance.showError(error.reason);
-					}
-					start();
-				});
+				visitor.setUserId(result.userId);
+				start();
 			});
 		}
 	},

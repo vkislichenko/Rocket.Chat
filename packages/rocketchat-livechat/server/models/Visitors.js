@@ -1,6 +1,8 @@
 class LivechatVisitors extends RocketChat.models._Base {
 	constructor() {
 		super('livechat_visitors');
+
+		// @TODO add index profile.token
 	}
 
 	findById(userId) {

@@ -32,7 +32,7 @@
 		@streamRoom.on "#{room}/#{eventName}", callback
 
 	onUser: (eventName, callback) ->
-		@streamUser.on "#{Meteor.userId()}/#{eventName}", callback
+		@streamUser.on "#{visitor.userId()}/#{eventName}", callback
 
 
 	unAll: (callback) ->
@@ -42,4 +42,4 @@
 		@streamRoom.removeListener "#{room}/#{eventName}", callback
 
 	unUser: (callback) ->
-		@streamUser.removeListener Meteor.userId(), callback
+		@streamUser.removeListener visitor.userId(), callback
