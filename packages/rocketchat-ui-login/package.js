@@ -40,7 +40,7 @@ Package.onUse(function(api) {
 
 	api.addFiles('client/login/footer.js', 'client');
 	api.addFiles('client/login/form.coffee', 'client');
-	api.addFiles('client/login/header.coffee', 'client');
+	api.addFiles('client/login/header.js', 'client');
 	api.addFiles('client/login/services.js', 'client');
 	api.addFiles('client/login/social.js', 'client');
 	api.addFiles('client/username/username.coffee', 'client');
