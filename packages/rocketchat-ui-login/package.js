@@ -38,7 +38,7 @@ Package.onUse(function(api) {
 	api.addFiles('client/username/layout.html', 'client');
 	api.addFiles('client/username/username.html', 'client');
 
-	api.addFiles('client/login/footer.coffee', 'client');
+	api.addFiles('client/login/footer.js', 'client');
 	api.addFiles('client/login/form.coffee', 'client');
 	api.addFiles('client/login/header.coffee', 'client');
 	api.addFiles('client/login/services.coffee', 'client');
