@@ -1,7 +1,7 @@
 /* globals Importer */
 // # Class for all the selection of users and channels for the importers
 
-	Importer.Selection = class ImporterSelection {
+	Importer.Selection = class Selection {
 	/**
 	*Constructs a new importer selection object.
 	*@param [String] name the name of the Importer

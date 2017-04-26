@@ -1,5 +1,5 @@
 /*globals Importer */
-// # "ENUM" of the import step, the value is the translation string
+// "ENUM" of the import step, the value is the translation string
 Importer.ProgressStep = Object.freeze({
 	NEW: 'importer_new',
 	PREPARING_STARTED: 'importer_preparing_started',

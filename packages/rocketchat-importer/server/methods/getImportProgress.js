@@ -12,8 +12,8 @@ Meteor.methods({
 				method: 'setupImporter'
 			});
 		}
-		if (Importer.Importers[name] != null) {
-			return (ref = Importer.Importers[name].importerInstance) != null ? ref.getProgress() : void 0;
+		if (Importer.Importers[name]) {
+			return Importer.Importers[name].importerInstance && Importer.Importers[name].importerInstance.getProgress();
 		} else {
 			throw new Meteor.Error('error-importer-not-defined', 'The importer was not defined correctly, it is missing the Import class.', {
 				method: 'getImportProgress'
