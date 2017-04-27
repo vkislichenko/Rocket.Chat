@@ -1,1 +1,3 @@
-let Importer = {};//eslint-disable-line
+/*globals Importer */
+Importer = {};
+export default Importer;

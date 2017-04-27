@@ -1,5 +1,24 @@
 /*globals Importer*/
+
+
+
 Importer.Base = class ImporterBase {
+	static getBSONSafeArraysFromAnArray(theArray) {
+		const BSONSize = Importer.Base.getBSONSize(theArray);
+		const maxSize = Math.floor(theArray.length / (Math.ceil(BSONSize / Importer.Base.MaxBSONSize)));
+		const safeArrays = [];
+		let i = 0;
+		while (i < theArray.length) {
+			safeArrays.push(theArray.slice(i, i += maxSize));
+		}
+		return safeArrays;
+	}
+	static getBSONSize(object) {
+		const BSON = require('bson')['native']().BSON;
+		const bson = new BSON();
+		return bson.calculateObjectSize(object);
+	}
+
 	constructor(name, description, mimeType) {
 		this.MaxBSONSize = 8000000;
 		this.http = Npm.require('http');
@@ -24,24 +43,6 @@ Importer.Base = class ImporterBase {
 		this.channels = {};
 		this.messages = {};
 	}
-
-	getBSONSize(object) {
-		const BSON = require('bson')['native']().BSON;
-		const bson = new BSON();
-		return bson.calculateObjectSize(object);
-	}
-
-	getBSONSafeArraysFromAnArray(theArray) {
-		const BSONSize = Importer.Base.getBSONSize(theArray);
-		const maxSize = Math.floor(theArray.length / (Math.ceil(BSONSize / Importer.Base.MaxBSONSize)));
-		const safeArrays = [];
-		let i = 0;
-		while (i < theArray.length) {
-			safeArrays.push(theArray.slice(i, i += maxSize));
-		}
-		return safeArrays;
-	}
-
 
 	prepare(dataURI, sentContentType, fileName) {
 		const fileType = this.getFileType(new Buffer(dataURI.split(',')[1], 'base64'));
