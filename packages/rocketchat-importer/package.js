@@ -18,8 +18,8 @@ Package.onUse(function(api) {
 	api.use('templating', 'client');
 
 	//Import Framework
-	api.addFiles('lib/_importer.coffee');
-	api.addFiles('lib/importTool.coffee');
+	api.addFiles('lib/_importer.js');
+	api.addFiles('lib/importTool.js');
 	api.addFiles('server/classes/ImporterBase.coffee', 'server');
 	api.addFiles('server/classes/ImporterProgress.coffee', 'server');
 	api.addFiles('server/classes/ImporterProgressStep.coffee', 'server');
@@ -41,11 +41,11 @@ Package.onUse(function(api) {
 
 	//Client
 	api.addFiles('client/admin/adminImport.html', 'client');
-	api.addFiles('client/admin/adminImport.coffee', 'client');
+	api.addFiles('client/admin/adminImport.js', 'client');
 	api.addFiles('client/admin/adminImportPrepare.html', 'client');
-	api.addFiles('client/admin/adminImportPrepare.coffee', 'client');
+	api.addFiles('client/admin/adminImportPrepare.js', 'client');
 	api.addFiles('client/admin/adminImportProgress.html', 'client');
-	api.addFiles('client/admin/adminImportProgress.coffee', 'client');
+	api.addFiles('client/admin/adminImportProgress.js', 'client');
 
 	//Imports database records cleanup, mark all as not valid.
 	api.addFiles('server/startup/setImportsToInvalid.coffee', 'server');
