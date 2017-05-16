@@ -72,7 +72,7 @@ Template.messages.helpers({
 		if (agent.name) {
 			agentData.name = agent.name;
 		}
-
+/*
 		if (agent.emails && agent.emails[0] && agent.emails[0].address) {
 			agentData.email = agent.emails[0].address;
 		}
@@ -80,7 +80,7 @@ Template.messages.helpers({
 		if (agent.customFields && agent.customFields.phone) {
 			agentData.phone = agent.customFields.phone;
 		}
-
+*/
 		return agentData;
 	}
 });
