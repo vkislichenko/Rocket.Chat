@@ -66,6 +66,12 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 
 	const notificationPreferencesByRoom = RocketChat.models.Subscriptions.findNotificationPreferencesByRoom(room._id);
 	notificationPreferencesByRoom.forEach(function(subscription) {
+
+		//[vkislichenko] : force desktop notifications
+		//TODO : add settings for it
+		subscription.disableNotifications = false;
+		subscription.desktopNotifications = 'all';
+
 		if (subscription.disableNotifications) {
 			settings.dontNotifyDesktopUsers.push(subscription.u._id);
 			settings.dontNotifyMobileUsers.push(subscription.u._id);
