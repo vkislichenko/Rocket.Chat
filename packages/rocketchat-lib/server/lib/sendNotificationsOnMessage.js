@@ -1,6 +1,8 @@
 /* globals Push */
 import moment from 'moment';
 
+const logger = new Logger('Notifications');
+
 RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 	// skips this callback if the message was edited
 	if (message.editedAt) {
@@ -89,6 +91,8 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 		}
 		settings.desktopNotificationDurations[subscription.u._id] = subscription.desktopNotificationDuration;
 	});
+
+	logger.debug('settings', JSON.stringify(settings, null, 2));
 
 	let userIdsToNotify = [];
 	let userIdsToPushNotify = [];
