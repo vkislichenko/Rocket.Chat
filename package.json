@@ -73,6 +73,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
+    "bcrypt": "^1.0.2",
     "bcrypt-nodejs": "0.0.3",
     "codemirror": "^5.25.2",
     "file-type": "^4.3.0",

@@ -1,0 +1,26 @@
+<template name="listContactsFlex">
+    <header class="primary-background-color">
+        <div>
+            <h4>{{_ "Contacts"}} <span class="room-count-small">({{list.count}})</span></h4>
+        </div>
+    </header>
+    <div class="content primary-background-color">
+        <div class="wrapper">
+            <ul>
+                {{#each list}}
+                    <li class="link-room-{{rid}} background-transparent-darker-hover {{active}} {{#if unread}}has-unread{{/if}} {{#if alert}}has-alert{{/if}}">
+                        <a class="open-room" href="{{route}}" title="{{name}}">
+                            {{#if unread}}
+                                <span class="unread">{{unread}}</span>
+                            {{/if}}
+                            <i class="{{roomIcon}} status-{{userStatus}}" aria-label=""></i>
+                            <span class='name {{archived}}'>{{name}}</span>
+                        </a>
+                    </li>
+                {{else}}
+                    <p class="empty" title="{{_ "No_contacts_yet" }}">No contacts yet</p>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</template>
