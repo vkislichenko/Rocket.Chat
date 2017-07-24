@@ -1,4 +1,4 @@
-RocketChat.roomTypes.add('contacts', 400, {
+RocketChat.roomTypes.add('contacts', 21, {
 	template: 'contacts',
 	icon: 'icon-at',
 	route: {

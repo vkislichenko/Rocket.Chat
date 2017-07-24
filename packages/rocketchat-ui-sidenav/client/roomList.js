@@ -49,6 +49,10 @@ Template.roomList.helpers({
 		return this.identifier === 'l';
 	},
 
+	isContancts() {
+		return this.identifier === 'contacts';
+	},
+
 	unreadClass(room) {
 		let classes = '';
 
@@ -75,6 +79,8 @@ Template.roomList.helpers({
 
 Template.roomList.events({
 	'click .more'(e, t) {
+		if (t.data.identifier === 'contacts') { return; }
+
 		if (t.data.identifier === 'p') {
 			SideNav.setFlex('listPrivateGroupsFlex');
 		} else if (t.data.isCombined) {
