@@ -74,6 +74,12 @@ Template.roomList.helpers({
 
 	hasMoreGroupsButton(room) {
 		return room.identifier === 'p';
+	},
+
+	roomType(room) {
+		if (room.header || room.identifier) {
+			return `type-${ room.header || room.identifier }`;
+		}
 	}
 });
 
