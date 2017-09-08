@@ -1,15 +1,18 @@
 <template name="listContactsFlex">
-    <header class="primary-background-color">
-        <div>
-            <h4>{{_ "Contacts"}} <span class="room-count-small">({{list.count}})</span></h4>
-        </div>
-    </header>
-    <div class="content primary-background-color">
-        <div class="wrapper">
-            <ul>
+    <aside class="sidebar sidebar--light" role="navigation">
+        <header class="sidebar__header">
+            {{> accountBox lighten=true modifier="--contacts"}}
+            <button class="sidebar-flex__back-button" data-action="back">
+                {{> icon block="sidebar-flex__back-icon" icon="back"}}
+                <span>{{_ "Back_to_chat"}}</span>
+            </button>
+        </header>
+        <div class="rooms-list" aria-label="{{_ "Contacts"}}">
+            <h3 class="rooms-list__type">{{_ "Contacts"}}</h3>
+            <ul class="rooms-list__list">
                 {{#each list}}
-                    <li class="link-room-{{rid}} background-transparent-darker-hover {{active}} {{#if unread}}has-unread{{/if}} {{#if alert}}has-alert{{/if}}">
-                        <a class="open-room" href="{{route}}" title="{{name}}">
+                    <li class="link-room-{{rid}} sidebar-item sidebar-item--darken {{active}} {{#if unread}}has-unread{{/if}} {{#if alert}}has-alert{{/if}}">
+                        <a class="open-room sidebar-item__link" href="{{route}}" title="{{name}}">
                             {{#if unread}}
                                 <span class="unread">{{unread}}</span>
                             {{/if}}
@@ -22,5 +25,5 @@
                 {{/each}}
             </ul>
         </div>
-    </div>
+    </aside>
 </template>

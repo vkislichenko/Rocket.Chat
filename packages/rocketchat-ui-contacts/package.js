@@ -21,30 +21,10 @@ Package.onUse(function(api) {
 		'rocketchat:ui'
 	]);
 
+	/*
 	//i18n : preload
-	api.use('tap:i18n@1.8.2');
 	api.addFiles('package-tap.i18n', ['client', 'server']);
-
-
-	//STARTUP
-	api.addFiles('startup/collections.js', ['server', 'client']);
-	api.addFiles('startup/roomTypes.js', 'client');
-
-
-	//LIB FILES
-	api.addFiles('client/lib/contacts.js', 'client');
-
-	// TEMPLATE FILES
-	api.addFiles('client/views/contacts.html', 'client');
-	api.addFiles('client/views/listContactsFlex.html', 'client');
-
-	api.addFiles('client/views/contacts.js', 'client');
-	api.addFiles('client/views/listContactsFlex.js', 'client');
-
-	//SERVER
-	api.addFiles('server/publications/contacts.js', 'server');
-
-	//i18n : postload
+	//i18n : load
 	const fs = Npm.require('fs');
 	const workingDir = process.env.PWD || '.';
 	fs.readdirSync(`${ workingDir }/packages/rocketchat-ui-contacts/i18n`).forEach(function(filename) {
@@ -52,4 +32,28 @@ Package.onUse(function(api) {
 			api.addFiles(`i18n/${ filename }`, ['client', 'server']);
 		}
 	});
+	//i18n : postload
+	api.use('tap:i18n@1.8.2');
+	*/
+
+	//STARTUP
+	api.addFiles('startup/collections.js', ['server', 'client']);
+
+	//LIB FILES
+	api.addFiles('client/lib/contacts.js', 'client');
+
+	// TEMPLATE FILES
+	api.addFiles('client/views/contactsButton.html', 'client');
+	api.addFiles('client/views/contactsListFlex.html', 'client');
+
+	api.addFiles('client/views/contactsButton.js', 'client');
+	api.addFiles('client/views/contactsListFlex.js', 'client');
+
+	//STYLESHEETS FILES
+	api.addFiles('client/stylesheets/contacts.css', 'client');
+
+	//SERVER
+	api.addFiles('server/publications/contacts.js', 'server');
+
+
 });

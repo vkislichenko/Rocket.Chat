@@ -9,10 +9,8 @@ Template.listContactsFlex.helpers({
 });
 
 Template.listContactsFlex.events({
-	'click .stuff'(event) {
-		event.stopPropagation();
-		event.preventDefault();
-		// return Contacts.doStuff();
+	'click [data-action="back"]'() {
+		SideNav.closeFlex();
 	},
 	'click .open-room'() {
 		return SideNav.closeFlex();

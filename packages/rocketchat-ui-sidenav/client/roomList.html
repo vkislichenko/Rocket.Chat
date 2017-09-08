@@ -1,8 +1,6 @@
 <template name="roomList">
 	{{#if isLivechat}}
 		{{> livechat . }}
-	{{else}} {{#if isContancts}}
-		{{> contacts . }}
 	{{else}}
 		{{#with rooms}}
 			{{#if shouldAppear .. .}}
@@ -23,5 +21,5 @@
 					</ul>
 				{{/if}}
 		{{/with}}
-	{{/if}} {{/if}}
+	{{/if}}
 </template>
