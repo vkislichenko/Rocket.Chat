@@ -1,0 +1,4 @@
+.rooms-list__show-more {
+    color: var(--rooms-list-empty-text-color);
+    margin-left: calc(var(--sidebar-default-padding) - (var(--sidebar-default-padding) / 3));
+}
