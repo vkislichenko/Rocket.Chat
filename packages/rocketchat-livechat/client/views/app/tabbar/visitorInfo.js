@@ -124,21 +124,14 @@ Template.visitorInfo.helpers({
 	},
 
 	roomOpen() {
-		if (!this.rid) { return false; }
-		const room = ChatRoom.findOne({ _id: this.rid });
-
-		return room.open;
+		return this.open;
 	},
 	roomArchived() {
-		if (!this.rid) { return false; }
-		const room = ChatRoom.findOne({ _id: this.rid });
-
-		return room.archived;
+		return this.archived;
 	},
 
 	inquiryOpen() {
-		if (!this.rid) { return false; }
-		const inquiry = LivechatInquiry.findOne({ rid: this.rid });
+		const inquiry = LivechatInquiry.findOne({ rid: this._id });
 		if (!inquiry) { return false; }
 		return (inquiry.status === 'open');
 	},

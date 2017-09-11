@@ -112,7 +112,7 @@ Template.livechat.events({
 		});
 	},
 
-	'click .inquiries .open-room'(event) {
+	'click .inquiries li a'(event) {
 		event.preventDefault();
 		event.stopPropagation();
 
