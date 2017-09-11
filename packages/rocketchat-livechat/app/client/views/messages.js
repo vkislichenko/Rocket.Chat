@@ -2,7 +2,7 @@
 
 Template.messages.helpers({
 	messages() {
-		return ChatMessage.find({
+		const result = ChatMessage.find({
 			rid: visitor.getRoom(),
 			t: {
 				'$ne': 't'
@@ -12,6 +12,19 @@ Template.messages.helpers({
 				ts: 1
 			}
 		});
+		if (result.count()) {
+			return result;
+		}
+
+		//TODO: move message to config
+		//Default welcome message
+		return [{
+			msg: "Добрый день.\nОпишите Ваш вопрос, или запросите чат с оператором!",
+			rid: visitor.getRoom(),
+			u: {
+				username: 'tanbot'
+			}
+		}];
 	},
 	showOptions() {
 		if (Template.instance().showOptions.get()) {
@@ -72,7 +85,7 @@ Template.messages.helpers({
 		if (agent.name) {
 			agentData.name = agent.name;
 		}
-/*
+		/*
 		if (agent.emails && agent.emails[0] && agent.emails[0].address) {
 			agentData.email = agent.emails[0].address;
 		}
