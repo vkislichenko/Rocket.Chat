@@ -47,9 +47,67 @@ RocketChat.API.v1.addRoute(['dm.close', 'im.close'], { authRequired: true }, {
 	}
 });
 
+RocketChat.API.v1.addRoute(['dm.counters', 'im.counters'], { authRequired: true }, {
+	get() {
+		const access = RocketChat.authz.hasPermission(this.userId, 'view-room-administration');
+		const ruserId = this.requestParams().userId;
+		let user = this.userId;
+		let unreads = null;
+		let userMentions = null;
+		let unreadsFrom = null;
+		let joined = false;
+		let msgs = null;
+		let latest = null;
+		let members = null;
+		let lm = null;
+
+		if (ruserId) {
+			if (!access) {
+				return RocketChat.API.v1.unauthorized();
+			}
+			user = ruserId;
+		}
+		const rs = findDirectMessageRoom(this.requestParams(), {'_id': user});
+		const room = rs.room;
+		const dm = rs.subscription;
+		lm = room.lm ? room.lm : room._updatedAt;
+
+		if (typeof dm !== 'undefined' && dm.open) {
+			if (dm.ls && room.msgs) {
+				unreads = dm.unread;
+				unreadsFrom = dm.ls;
+			}
+			userMentions = dm.userMentions;
+			joined = true;
+		}
+
+		if (access || joined) {
+			msgs = room.msgs;
+			latest = lm;
+			members = room.usersCount;
+		}
+
+		return RocketChat.API.v1.success({
+			joined,
+			members,
+			unreads,
+			unreadsFrom,
+			msgs,
+			latest,
+			userMentions
+		});
+	}
+});
+
 RocketChat.API.v1.addRoute(['dm.files', 'im.files'], { authRequired: true }, {
 	get() {
 		const findResult = findDirectMessageRoom(this.requestParams(), this.user);
+		const addUserObjectToEveryObject = (file) => {
+			if (file.userId) {
+				file = this.insertUserObject({ object: file, userId: file.userId });
+			}
+			return file;
+		};
 
 		const { offset, count } = this.getPaginationItems();
 		const { sort, fields, query } = this.parseJsonQuery();
@@ -60,11 +118,11 @@ RocketChat.API.v1.addRoute(['dm.files', 'im.files'], { authRequired: true }, {
 			sort: sort ? sort : { name: 1 },
 			skip: offset,
 			limit: count,
-			fields: Object.assign({}, fields, RocketChat.API.v1.defaultFieldsToExclude)
+			fields
 		}).fetch();
 
 		return RocketChat.API.v1.success({
-			files,
+			files: files.map(addUserObjectToEveryObject),
 			count: files.length,
 			offset,
 			total: RocketChat.models.Uploads.find(ourQuery).count()
@@ -127,18 +185,26 @@ RocketChat.API.v1.addRoute(['dm.members', 'im.members'], { authRequired: true },
 
 		const { offset, count } = this.getPaginationItems();
 		const { sort } = this.parseJsonQuery();
-
-		const members = RocketChat.models.Rooms.processQueryOptionsOnResult(Array.from(findResult.room.usernames), {
-			sort: sort ? sort : -1,
+		const cursor = RocketChat.models.Subscriptions.findByRoomId(findResult._id, {
+			sort: { 'u.username':  sort.username != null ? sort.username : 1 },
 			skip: offset,
 			limit: count
 		});
 
+		const total = cursor.count();
+
+		const members = cursor.fetch().map(s => s.u && s.u.username);
+
+		const users = RocketChat.models.Users.find({ username: { $in: members } }, {
+			fields: { _id: 1, username: 1, name: 1, status: 1, utcOffset: 1 },
+			sort: { username:  sort.username != null ? sort.username : 1 }
+		}).fetch();
+
 		return RocketChat.API.v1.success({
-			members,
+			members: users,
 			count: members.length,
 			offset,
-			total: findResult.room.usernames
+			total
 		});
 	}
 });
@@ -157,7 +223,7 @@ RocketChat.API.v1.addRoute(['dm.messages', 'im.messages'], { authRequired: true 
 			sort: sort ? sort : { ts: -1 },
 			skip: offset,
 			limit: count,
-			fields: Object.assign({}, fields, RocketChat.API.v1.defaultFieldsToExclude)
+			fields
 		}).fetch();
 
 		return RocketChat.API.v1.success({
@@ -197,7 +263,7 @@ RocketChat.API.v1.addRoute(['dm.messages.others', 'im.messages.others'], { authR
 			sort: sort ? sort : { ts: -1 },
 			skip: offset,
 			limit: count,
-			fields: Object.assign({}, fields, RocketChat.API.v1.defaultFieldsToExclude)
+			fields
 		}).fetch();
 
 		return RocketChat.API.v1.success({
@@ -212,22 +278,25 @@ RocketChat.API.v1.addRoute(['dm.messages.others', 'im.messages.others'], { authR
 RocketChat.API.v1.addRoute(['dm.list', 'im.list'], { authRequired: true }, {
 	get() {
 		const { offset, count } = this.getPaginationItems();
-		const { sort, fields } = this.parseJsonQuery();
-		let rooms = _.pluck(RocketChat.models.Subscriptions.findByTypeAndUserId('d', this.userId).fetch(), '_room');
-		const totalCount = rooms.length;
+		const { sort = { name: 1 }, fields } = this.parseJsonQuery();
 
-		rooms = RocketChat.models.Rooms.processQueryOptionsOnResult(rooms, {
-			sort: sort ? sort : { name: 1 },
+		// TODO: CACHE: Add Breacking notice since we removed the query param
+
+		const cursor = RocketChat.models.Rooms.findBySubscriptionTypeAndUserId('d', this.userId, {
+			sort,
 			skip: offset,
 			limit: count,
-			fields: Object.assign({}, fields, RocketChat.API.v1.defaultFieldsToExclude)
+			fields
 		});
+
+		const total = cursor.count();
+		const rooms = cursor.fetch();
 
 		return RocketChat.API.v1.success({
 			ims: rooms,
 			offset,
 			count: rooms.length,
-			total: totalCount
+			total
 		});
 	}
 });
@@ -247,7 +316,7 @@ RocketChat.API.v1.addRoute(['dm.list.everyone', 'im.list.everyone'], { authRequi
 			sort: sort ? sort : { name: 1 },
 			skip: offset,
 			limit: count,
-			fields: Object.assign({}, fields, RocketChat.API.v1.defaultFieldsToExclude)
+			fields
 		}).fetch();
 
 		return RocketChat.API.v1.success({
@@ -263,13 +332,11 @@ RocketChat.API.v1.addRoute(['dm.open', 'im.open'], { authRequired: true }, {
 	post() {
 		const findResult = findDirectMessageRoom(this.requestParams(), this.user);
 
-		if (findResult.subscription.open) {
-			return RocketChat.API.v1.failure(`The direct message room, ${ this.bodyParams.name }, is already open for the sender`);
+		if (!findResult.subscription.open) {
+			Meteor.runAsUser(this.userId, () => {
+				Meteor.call('openRoom', findResult.room._id);
+			});
 		}
-
-		Meteor.runAsUser(this.userId, () => {
-			Meteor.call('openRoom', findResult.room._id);
-		});
 
 		return RocketChat.API.v1.success();
 	}
