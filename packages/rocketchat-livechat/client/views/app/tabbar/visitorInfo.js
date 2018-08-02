@@ -1,4 +1,4 @@
-/* globals LivechatVisitor */
+/* globals LivechatVisitor, LivechatInquiry */
 
 import _ from 'underscore';
 import s from 'underscore.string';
@@ -27,7 +27,6 @@ Template.visitorInfo.helpers({
 	},
 
 	room() {
-		console.log('room.id', this.rid);
 		return ChatRoom.findOne({ _id: this.rid });
 	},
 
@@ -128,14 +127,22 @@ Template.visitorInfo.helpers({
 	},
 
 	roomOpen() {
-		return this.open;
+		if (!this.rid) { return false; }
+		const room = ChatRoom.findOne({ _id: this.rid });
+
+		return room.open;
 	},
+
 	roomArchived() {
-		return this.archived;
+		if (!this.rid) { return false; }
+		const room = ChatRoom.findOne({ _id: this.rid });
+
+		return room.archived;
 	},
 
 	inquiryOpen() {
-		const inquiry = LivechatInquiry.findOne({ rid: this._id });
+		if (!this.rid) { return false; }
+		const inquiry = LivechatInquiry.findOne({ rid: this.rid });
 		if (!inquiry) { return false; }
 		return (inquiry.status === 'open');
 	},
@@ -226,11 +233,13 @@ Template.visitorInfo.events({
 			});
 		});
 	},
+
 	'click .close-inquiry'(event) {
 		event.preventDefault();
 
 		Meteor.call('livechat:closeInquiry', this.rid);
 	},
+
 	'click .archive-room'(event) {
 		event.preventDefault();
 
@@ -281,6 +290,17 @@ Template.visitorInfo.onCreated(function() {
 
 	this.autorun(() => {
 		this.user.set(LivechatVisitor.findOne({ '_id': this.visitorId.get() }));
+
+		//load guest department
+		if (this.user.get() && this.user.get().department) {
+			const sub = this.subscribe('livechat:departments', this.user.get().department);
+			if (sub.ready()) {
+				const department = LivechatDepartment.findOne({_id: this.user.get().department});
+				if (department) {
+					this.department.set(department);
+				}
+			}
+		}
 	});
 
 	this.subscribe('livechat:inquiry');
