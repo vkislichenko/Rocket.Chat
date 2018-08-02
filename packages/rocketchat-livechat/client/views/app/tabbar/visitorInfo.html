@@ -35,54 +35,56 @@
 						{{#if sms}} <li><i class="icon-mobile"></i>{{_ "SMS_Enabled"}}</li> {{/if}}
 						{{#if topic}} <li><strong>{{_ "Topic"}}</strong>: {{{RocketChatMarkdown topic}}}</li> {{/if}}
 						{{#if tags}} <li><strong>{{_ "Tags"}}</strong>: {{joinTags}}</li> {{/if}}
+						{{#if servedBy}}<li><strong>{{_ "Served by"}}</strong>: {{servedBy}}</li> {{/if}}
+						<li><strong>{{_ "ID"}}</strong>: {{_id}}</li>
+						<li><strong>{{_ "Status"}}</strong>: {{#if roomOpen}} {{_ "Opened"}} {{else}} {{_ "Closed"}} {{/if}}</li>
+						<li><strong>{{_ "Archived"}}</strong>: {{#if roomArchived}} {{_ "Yes"}} {{else}} {{_ "No"}} {{/if}}</li>
 					</ul>
 				</div>
 			{{/with}}
 
-            {{#with inquiry}}
-                <div class="info">
-                    <ul>
-                        {{#if status}}
-                            <li><strong>{{_ "Inquiry Status"}}</strong>: {{status}}</li>
-                        {{/if}}
-                    </ul>
-                </div>
-            {{/with}}
+			{{#with inquiry}}
+				<div class="info">
+					<ul>
+						{{#if status}}
+						<li><strong>{{_ "Inquiry Status"}}</strong>: {{status}}</li>
+						{{/if}}
+					</ul>
+				</div>
+			{{/with}}
 
-            {{#with department}}
-                <div class="info">
-                    <ul>
-                        {{#if name}}
-                            <li><strong>{{_ "Department"}}</strong>: {{name}}</li>
-                        {{/if}}
-                    </ul>
-                </div>
-            {{/with}}
+			{{#with department}}
+				<div class="info">
+					<ul>
+						{{#if name}}
+						<li><strong>{{_ "Department"}}</strong>: {{name}}</li>
+						{{/if}}
+					</ul>
+				</div>
+			{{/with}}
 		</div>
 
 		{{#if canSeeButtons}}
-            {{#with room}}
-                <nav class="centered-buttons">
-                    <button class='button button-block edit-livechat'><span><i class='icon-edit'></i> {{_ "Edit"}}</span></button>
-                    {{#if roomOpen}}
-                        <button class='button button-block close-livechat'><span><i class='icon-download'></i> {{_ "Close"}}</span></button>
-                        <button class="button button-block forward-livechat"><span><i class="icon-forward"></i> {{_ "Forward"}}</span></button>
-                    {{/if}}
+			<nav class="centered-buttons">
+				<button class='button button-block edit-livechat'><span><i class='icon-edit'></i> {{_ "Edit"}}</span></button>
+				{{#if roomOpen}}
+					<button class='button button-block close-livechat'><span><i class='icon-download'></i> {{_ "Close"}}</span></button>
+					<button class="button button-block forward-livechat"><span><i class="icon-forward"></i> {{_ "Forward"}}</span></button>
+				{{/if}}
 
-                    {{#if guestPool}}
-                        {{#if roomOpen}}
-                            <button class="button button-block return-inquiry"><span><i class="icon-ccw"></i> {{_ "Return"}}</span></button>
-                        {{else}}
-                            {{#if inquiryOpen}}
-                                <button class="button button-block close-inquiry"><span><i class="icon-download"></i> {{_ "Close Inquiry"}}</span></button>
-                            {{/if}}
-                            {{#unless roomArchived}}
-                                <button class="button button-block archive-room"><span><i class="icon-download"></i> {{_ "Archive Room"}}</span></button>
-                            {{/unless}}
+				{{#if guestPool}}
+                    {{#if roomOpen}}
+					    <button class="button button-block return-inquiry"><span><i class="icon-ccw"></i> {{_ "Return"}}</span></button>
+                    {{else}}
+                        {{#if inquiryOpen}}
+                            <button class="button button-block close-inquiry"><span><i class="icon-download"></i> {{_ "Close Inquiry"}}</span></button>
                         {{/if}}
-                    {{/if}}
-                </nav>
-            {{/with}}
+                        {{#unless roomArchived}}
+                            <button class="button button-block archive-room"><span><i class="icon-download"></i> {{_ "Archive Room"}}</span></button>
+                        {{/unless}}
+				    {{/if}}
+				{{/if}}
+			</nav>
 		{{/if}}
 
 		{{#if customFields}}
