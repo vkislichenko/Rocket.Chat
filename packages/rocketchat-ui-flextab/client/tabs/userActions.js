@@ -95,7 +95,7 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 		},
 
 		function() {
-			if (isSelf(this.username) || !directActions) {
+			if (isSelf(this.username)) {
 				return;
 			}
 			// videoAvaliable
@@ -134,7 +134,7 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 		},
 
 		function() {
-			if (isSelf(this.username) || !directActions) {
+			if (isSelf(this.username)) {
 				return;
 			}
 			// videoAvaliable
@@ -170,24 +170,28 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 					});
 				},
 			};
-		}, function() {
+		},
+
+		function() {
 			if (!isDirect() || isSelf(this.username)) {
 				return;
 			}
 			if (isBlocker()) {
 				return {
-					icon : 'mic',
+					icon : 'user',
 					name:t('Unblock_User'),
 					action: prevent(getUser, ({ _id }) => Meteor.call('unblockUser', { rid: Session.get('openedRoom'), blocked: _id }, success(() => toastr.success(t('User_is_unblocked'))))),
 				};
 			}
 			return {
-				icon : 'mic',
+				icon : 'ban',
 				name:t('Block_User'),
 				modifier: 'alert',
 				action: prevent(getUser, ({ _id }) => Meteor.call('blockUser', { rid: Session.get('openedRoom'), blocked: _id }, success(() => toastr.success(t('User_is_blocked'))))),
 			};
-		}, () => {
+		},
+
+		() => {
 			if (!directActions || !canSetOwner()) {
 				return;
 			}
@@ -223,7 +227,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 
 				}),
 			};
-		}, () => {
+		},
+
+		() => {
 			if (!directActions || !canSetLeader()) {
 				return;
 			}
@@ -259,7 +265,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 					}));
 				}),
 			};
-		}, () => {
+		},
+
+		() => {
 
 			if (!directActions || !canSetModerator()) {
 				return;
@@ -296,7 +304,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 					}));
 				}),
 			};
-		}, () => {
+		},
+
+		() => {
 			if (!directActions || user._id === Meteor.userId()) {
 				return;
 			}
@@ -314,7 +324,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 				name: t('Ignore'),
 				action: prevent(getUser, ({ _id }) => Meteor.call('ignoreUser', { rid: Session.get('openedRoom'), userId:_id, ignore: true }, success(() => toastr.success(t('User_has_been_ignored'))))),
 			};
-		}, () => {
+		},
+
+		() => {
 			if (!directActions || !canMuteUser()) {
 				return;
 			}
@@ -365,7 +377,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 					);
 				}),
 			};
-		}, {
+		},
+
+		{
 			group: 'channel',
 			icon: 'sign-out',
 			modifier: 'alert',
@@ -398,7 +412,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 				})));
 			}),
 			condition: () => directActions && canRemoveUser(),
-		}, {
+		},
+
+		{
 			icon : 'edit',
 			name: 'Edit',
 			group: 'admin',
@@ -406,7 +422,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 			action: prevent(getUser, function(user) {
 				this.editingUser.set(user._id);
 			}),
-		}, {
+		},
+
+		{
 			icon : 'trash',
 			name: 'Delete',
 			action: prevent(getUser, ({ _id }) => {
@@ -438,7 +456,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 			}),
 			group: 'admin',
 			condition: () => !hideAdminControls && hasPermission('delete-user'),
-		}, () => {
+		},
+
+		() => {
 			if (hideAdminControls || !hasPermission('assign-admin-role')) {
 				return;
 			}
@@ -456,7 +476,9 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 				name: t('Make_Admin'),
 				action: prevent(getUser, ({ _id }) => Meteor.call('setAdminStatus', _id, true, success(() => toastr.success(t('User_is_now_an_admin'))))),
 			};
-		}, () => {
+		},
+
+		() => {
 			if (hideAdminControls || !hasPermission('edit-other-user-active-status')) {
 				return;
 			}
